@@ -56,6 +56,9 @@ Basket.belongsTo(User)
 User.hasMany(Rating)
 Rating.belongsTo(User)
 
+User.hasMany(Device)
+Device.belongsTo(User)
+
 Basket.hasMany(BasketDevice)
 BasketDevice.belongsTo(Basket)
 
