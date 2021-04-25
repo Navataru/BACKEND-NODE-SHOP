@@ -2,6 +2,7 @@ const ApiError = require('../error/ApiError');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const {User, Basket} = require('../models/models')
+const db = require('../dbPool')
 
 const generateJwt = (id, email, role) => {
     return jwt.sign(
@@ -61,17 +62,22 @@ class UserController {
         return res.json(users)
     }
 
-
     async user(req, res) {
-        const user = await User.findOne(
-            {
-                where: {
-                    id: req.params.id
-                }
-            },
-        )
-        return res.json(user.email)
+        const id = req.params.id
+        const userr = await db.query('SELECT email FROM users WHERE id = $1', [id])
+        return res.json(userr.rows[0].email)
     }
+
+    // async user(req, res) {
+    //     const user = await User.findOne(
+    //         {
+    //             where: {
+    //                 id: req.params.id
+    //             }
+    //         },
+    //     )
+    //     return res.json(user.email)
+    // }
 
 }
 
