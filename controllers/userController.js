@@ -63,8 +63,8 @@ class UserController {
 
     async user(req, res) {
         const id = req.params.id
-        const userr = await db.query('SELECT email FROM users WHERE id = $1', [id])
-        return res.json(userr.rows[0].email)
+        const user = await db.query('SELECT email FROM users WHERE id = $1', [id])
+        return res.json(user.rows[0].email)
     }
 
     //------------------or------------------
