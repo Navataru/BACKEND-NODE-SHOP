@@ -1,17 +1,17 @@
 const uuid = require('uuid')
 const path = require('path');
-const {Device, DeviceInfo} = require('../models/models')
+const {Userdata, DeviceInfo, Device} = require('../models/models')
 const ApiError = require('../error/ApiError');
 
 class UserdataController {
 
     async create(req, res, next) {
         try {
-            let {name, price, userId, info} = req.body
+            let {name, rating, userId, info} = req.body
             const {img} = req.files
             let fileName = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
-            const device = await Device.create({name, price, img: fileName});
+            const userdata = await Userdata.create({name, rating, userId, img: fileName});
 
             if (info) {
                 info = JSON.parse(info)
@@ -19,14 +19,14 @@ class UserdataController {
                     DeviceInfo.create({
                         title: i.title,
                         description: i.description,
-                        deviceId: device.id
+                        deviceId: userdata.id
                     })
                 )
             }
 
-            return res.json(device)
+            return res.json(userdata)
         } catch (e) {
-            next(ApiError.badRequest(e.message))
+            next(ApiError.badRequest(e.message + " 1111"))
         }
     }
 
