@@ -2,8 +2,10 @@ const uuid = require('uuid')
 const path = require('path');
 const {Device, DeviceInfo} = require('../models/models')
 const ApiError = require('../error/ApiError');
+const db = require('../dbPool')
 
 class DeviceController {
+
     async create(req, res, next) {
         try {
             let {brandId, typeId, userId, userdatumId, info} = req.body
@@ -52,23 +54,32 @@ class DeviceController {
     //     }
     // }
 
+
     async getAll(req, res) {
         let {brandId, typeId, limit, page} = req.query
         page = page || 1
-        limit = limit || 9
+        limit = limit || 50
         let offset = page * limit - limit
         let devices;
+        //req.params
+        //const id = req.params.brandId
+        const id = null
         if (!brandId && !typeId) {
-            devices = await Device.findAndCountAll({limit, offset})
+            devices = await db.query('SELECT * FROM userdata JOIN devices on userdata.id = devices."userdatumId"')
+            //devices = await Device.findAndCountAll({limit, offset})
         }
         if (brandId && !typeId) {
-            devices = await Device.findAndCountAll({where:{brandId}, limit, offset})
+            devices = await db.query('SELECT * FROM userdata JOIN devices on userdata.id = devices."userdatumId" WHERE devices."brandId" = $1', [brandId] )
+            //devices = await Device.findAndCountAll({where:{brandId}, limit, offset})
+
         }
         if (!brandId && typeId) {
-            devices = await Device.findAndCountAll({where:{typeId}, limit, offset})
+            devices = await db.query('SELECT * FROM userdata JOIN devices on userdata.id = devices."userdatumId" WHERE devices."typeId" = $1', [typeId] )
+            //devices = await Device.findAndCountAll({where:{typeId}, limit, offset})
         }
         if (brandId && typeId) {
-            devices = await Device.findAndCountAll({where:{typeId, brandId}, limit, offset})
+            devices = await db.query('SELECT * FROM userdata JOIN devices on userdata.id = devices."userdatumId" WHERE devices."brandId" = $1 AND devices."typeId" = $2', [brandId, typeId] )
+            //devices = await Device.findAndCountAll({where:{typeId, brandId}, limit, offset})
         }
         return res.json(devices)
     }
