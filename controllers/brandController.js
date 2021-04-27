@@ -3,9 +3,13 @@ const ApiError = require('../error/ApiError');
 
 class BrandController {
     async create(req, res) {
-        const {name} = req.body
-        const brand = await Brand.create({name})
-        return res.json(brand)
+        const {name, role} = req.body
+        if(role === "ADMIN") {
+            const brand = await Brand.create({name})
+            return res.json(brand)
+        }else{
+            return res.json("No access")
+        }
     }
 
     async getAll(req, res) {

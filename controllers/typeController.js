@@ -4,10 +4,14 @@ const ApiError = require('../error/ApiError');
 class TypeController {
     async create(req, res, next) {
         try {
-            const {name} = req.body
-            const type = await Type.create({name})
-            return res.json(type)
-        }catch (e){
+            const {name, role} = req.body
+            if (role === "ADMIN") {
+                const type = await Type.create({name})
+                return res.json(type)
+            } else {
+                return res.json("No access")
+            }
+        } catch (e) {
             next(ApiError.badRequest(e.message))
         }
 
