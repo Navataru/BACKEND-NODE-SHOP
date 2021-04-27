@@ -80,8 +80,11 @@ Rating.belongsTo(Device)
 Device.hasMany(BasketDevice)
 BasketDevice.belongsTo(Device)
 
-Userdata.hasMany(DeviceInfo, {as: 'info'});
-DeviceInfo.belongsTo(Userdata)
+Userdata.hasMany(Device)
+Device.belongsTo(Userdata)
+
+Device.hasMany(DeviceInfo, {as: 'info'});
+DeviceInfo.belongsTo(Device)
 
 Type.belongsToMany(Brand, {through: TypeBrand })
 Brand.belongsToMany(Type, {through: TypeBrand })

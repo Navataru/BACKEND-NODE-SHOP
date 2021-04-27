@@ -6,9 +6,9 @@ const ApiError = require('../error/ApiError');
 class DeviceController {
     async create(req, res, next) {
         try {
-            let {brandId, typeId, userId, info} = req.body
+            let {brandId, typeId, userId, userdatumId, info} = req.body
 
-            const device = await Device.create({brandId, typeId, userId});
+            const device = await Device.create({brandId, typeId, userId, userdatumId});
 
             if (info) {
                 info = JSON.parse(info)

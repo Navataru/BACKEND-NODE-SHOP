@@ -2,6 +2,7 @@ const uuid = require('uuid')
 const path = require('path');
 const {Userdata, DeviceInfo, Device} = require('../models/models')
 const ApiError = require('../error/ApiError');
+const db = require('../dbPool')
 
 class UserdataController {
 
@@ -29,6 +30,14 @@ class UserdataController {
             next(ApiError.badRequest(e.message + " 1111"))
         }
     }
+
+    async userData(req, res) {
+        const id = req.params.id
+        const userdata = await db.query('SELECT * FROM userdata WHERE userdata."userId" = $1', [id])
+        //return res.json(user.rows[0].email)
+        return res.json(userdata.rows[0])
+    }
+
 
     // async getAll(req, res) {
     //     let {brandId, typeId, limit, page} = req.query
